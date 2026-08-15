@@ -20,7 +20,7 @@ ext {
 }
 
 android {
-    compileSdk 36
+    compileSdk 37
     namespace 'com.afkanerd.deku.DefaultSMS'
 
     def _versionName = versionProperties['versionName']
@@ -54,7 +54,7 @@ android {
     defaultConfig {
         applicationId "com.afkanerd.deku"
         minSdk 24
-        targetSdk 36
+        targetSdk 37
         versionCode tagVersion
         versionName _versionName
 
@@ -164,7 +164,7 @@ androidComponents {
 }
 
 dependencies {
-    implementation 'com.github.smswithoutborders:lib_smsmms_android:73432ef'
+    implementation 'com.github.smswithoutborders:lib_smsmms_android:2fe8034219'
     implementation 'com.github.smswithoutborders:lib_signal_double_ratchet_java:ad727a57b3'
     implementation libs.androidx.room.testing
     implementation libs.androidx.activity

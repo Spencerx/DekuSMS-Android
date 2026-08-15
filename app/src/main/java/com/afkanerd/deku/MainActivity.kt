@@ -49,6 +49,7 @@ import com.afkanerd.smswithoutborders_libsmsmms.extensions.context.setNativesLoa
 import com.afkanerd.smswithoutborders_libsmsmms.extensions.context.settingsGetTheme
 import com.afkanerd.smswithoutborders_libsmsmms.ui.components.NavHostControllerInstance
 import com.afkanerd.smswithoutborders_libsmsmms.ui.navigation.ConversationsScreenNav
+import com.afkanerd.smswithoutborders_libsmsmms.ui.viewModels.ConversationsViewModel
 import com.afkanerd.smswithoutborders_libsmsmms.ui.viewModels.SearchViewModel
 import com.afkanerd.smswithoutborders_libsmsmms.ui.viewModels.ThreadsViewModel
 import com.example.compose.AppTheme
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity(){
 
     private lateinit var navController: NavHostController
     private val threadsViewModel: ThreadsViewModel by viewModels()
+    private val conversationViewModel: ConversationsViewModel by viewModels()
     private val secureViewModel: SecureConversationViewModel by viewModels()
     private val gatewayServerViewModel: GatewayServerViewModel by viewModels()
     private val searchViewModel: SearchViewModel by viewModels()
@@ -99,7 +101,7 @@ class MainActivity : AppCompatActivity(){
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text= stringResource(R.string.homepage_menu_routed),
+                                                        text = stringResource(R.string.homepage_menu_routed),
                                                         color = MaterialTheme.colorScheme.onBackground
                                                     )
                                                 },
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity(){
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text= stringResource(R.string.remote_listeners),
+                                                        text = stringResource(R.string.remote_listeners),
                                                         color = MaterialTheme.colorScheme.onBackground
                                                     )
                                                 },
@@ -125,7 +127,7 @@ class MainActivity : AppCompatActivity(){
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text= stringResource(R.string.about_deku),
+                                                        text = stringResource(R.string.about_deku),
                                                         color = MaterialTheme.colorScheme.onBackground
                                                     )
                                                 },
@@ -139,7 +141,7 @@ class MainActivity : AppCompatActivity(){
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text= stringResource(com.afkanerd.deku.DefaultSMS.R.string.secure),
+                                                        text = stringResource(com.afkanerd.deku.DefaultSMS.R.string.secure),
                                                         color = MaterialTheme.colorScheme.onBackground
                                                     )
                                                 },
@@ -152,11 +154,13 @@ class MainActivity : AppCompatActivity(){
                                         conversationsCustomViewModel = secureViewModel, //This can be an array
                                         conversationsCustomComposable = { vm ->
                                             SecureConversationComposable(
-                                                vm as SecureConversationViewModel)
+                                                vm as SecureConversationViewModel
+                                            )
                                         },
-                                        conversationsCustomDataView = { 
+                                        conversationsCustomDataView = {
                                             KeyExchangeType(it)
-                                        }
+                                        },
+                                        conversationsViewModel = conversationViewModel,
                                     ) {
                                         composable<RemoteListenersQueuesScreen> {
                                             RMQQueuesComposable(
