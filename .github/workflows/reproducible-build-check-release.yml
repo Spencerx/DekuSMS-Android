@@ -226,16 +226,16 @@ jobs:
             exit 1
           fi
           VERSION_NAME=$(grep "^versionName=" version.properties | cut -d'=' -f2)
-          TAG_VERSION=$(grep "^tagVersion=" version.properties | cut -d'=' -f2)
+          # TAG_VERSION=$(grep "^tagVersion=" version.properties | cut -d'=' -f2)
           echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
-          echo "tag_version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag_version=$VERSION_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # Tags using the clean tagVersion tracking integer
-          git tag "${{ steps.version.outputs.tag_version }}" -m "Release ${{ steps.version.outputs.version_name }} — reproducible splits verified"
+          git tag "${{ steps.version.outputs.tag_version }}" -m "Release ${{ steps.version.outputs.version_name }}"
           git push origin "${{ steps.version.outputs.tag_version }}"
 
       - name: Download signed APKs from build-1
