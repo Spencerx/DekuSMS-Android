@@ -1,7 +1,7 @@
 FROM ubuntu:jammy-20230624@sha256:b060fffe8e1561c9c3e6dea6db487b900100fc26830b9ea2ec966c151ab4c020
 
 RUN apt update
-RUN apt install -y git openjdk-17-jdk unzip wget
+RUN apt install -y git openjdk-17-jdk unzip wget curl
 
 WORKDIR /android
 
