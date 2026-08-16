@@ -32,8 +32,8 @@ RUN chmod -R 777 ${ANDROID_HOME}
 
 # Accept licenses first
 # RUN yes | sdkmanager --licenses --sdk_root="${ANDROID_HOME}"
-RUN yes | sdkmanager --sdk_root="${ANDROID_HOME}" --include_preview --channel=3 \
-    "platforms;android-37" || true
+# RUN yes | sdkmanager --sdk_root="${ANDROID_HOME}" --include_preview --channel=3 \
+#    "platforms;android-37" || true
 
 # Install valid stable packages (excluding non-existent android-37)
 RUN yes | sdkmanager --sdk_root="${ANDROID_HOME}" \
