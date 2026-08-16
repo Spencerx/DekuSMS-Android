@@ -31,22 +31,16 @@ android {
 
     splits {
 
-        // Configures multiple APKs based on ABI.
         abi {
+            def isBuildingBundle = gradle.startParameter.taskNames.any {
+                it.toLowerCase().contains("bundle")
+            }
 
-            // Enables building multiple APKs per ABI.
-            enable true
-
-            // By default all ABIs are included, so use reset() and include to specify that you only
-            // want APKs for x86 and x86_64.
-
-            // Resets the list of ABIs for Gradle to create APKs for to none.
+            // Disable split abis when building appBundle
+//            isEnable = !isBuildingBundle
+            enable !isBuildingBundle
             reset()
-
-            // Specifies a list of ABIs for Gradle to create APKs for.
             include "arm64-v8a", "armeabi-v7a", "x86_64"
-
-            // Specifies that you don't want to also generate a universal APK that includes all ABIs.
             universalApk false
         }
     }
@@ -166,9 +160,8 @@ androidComponents {
 dependencies {
     implementation 'com.github.smswithoutborders:lib_smsmms_android:84f92da369'
     implementation 'com.github.smswithoutborders:lib_signal_double_ratchet_java:ad727a57b3'
-    implementation libs.androidx.room.testing
+    androidTestImplementation libs.androidx.room.testing
     implementation libs.androidx.activity
-    implementation libs.androidx.espresso.core
     def paging_version = "3.3.0"
 
     testImplementation libs.junit
@@ -344,4 +337,11 @@ dependencies {
     // See Add the KSP plugin to your project
     def room_version = "2.8.4"
     ksp "androidx.room:room-compiler:$room_version"
+}
+
+configurations.all {
+    resolutionStrategy {
+        force libs.androidx.junit
+        force libs.androidx.espresso.core
+    }
 }
