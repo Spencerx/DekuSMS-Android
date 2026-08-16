@@ -17,10 +17,13 @@ ENV ANDROID_BUILD_TOOLS_VERSION         35.0.0
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH         ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/cmdline-tools/bin
 
-RUN cd /usr/local/
-RUN wget -q "https://dl.google.com/android/repository/${ANDROID_COMMAND_LINE_TOOLS_FILENAME}"
-RUN unzip ${ANDROID_COMMAND_LINE_TOOLS_FILENAME} -d /usr/local/android-sdk-linux
-RUN rm ${ANDROID_COMMAND_LINE_TOOLS_FILENAME}
+RUN cd /usr/local && \
+    DOWNLOAD_URL=$(curl -s https://developer.android.com/studio \
+      | grep -o 'https://dl.google.com/android/repository/commandlinetools-linux-[0-9]*_latest.zip' \
+      | head -1) && \
+    wget -q "$DOWNLOAD_URL" -O commandlinetools.zip && \
+    unzip commandlinetools.zip -d /usr/local/android-sdk-linux && \
+    rm commandlinetools.zip
 
 RUN yes | sdkmanager --update --sdk_root="${ANDROID_HOME}"
 RUN yes | sdkmanager --sdk_root="${ANDROID_HOME}" "platforms;android-36" "platforms;android-37" "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" "extras;google;m2repository" "extras;android;m2repository" "extras;google;google_play_services" "ndk;28.0.13004108" "cmake;3.22.1"
