@@ -28,6 +28,8 @@ RUN mkdir -p ${ANDROID_HOME}/cmdline-tools && \
     mv /tmp/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest && \
     rm -rf /tmp/commandlinetools.zip /tmp/cmdline-tools
 
+RUN chmod -R 777 ${ANDROID_HOME}
+
 # Accept licenses first
 # RUN yes | sdkmanager --licenses --sdk_root="${ANDROID_HOME}"
 RUN yes | sdkmanager --sdk_root="${ANDROID_HOME}" --include_preview --channel=3 \
