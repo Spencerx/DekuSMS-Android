@@ -7,6 +7,7 @@ import androidx.room.Database
 import androidx.room.DeleteColumn
 import androidx.room.DeleteTable
 import androidx.room.RenameTable
+import androidx.room.Room
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import androidx.room.migration.AutoMigrationSpec
@@ -24,6 +25,7 @@ import com.afkanerd.deku.RemoteListeners.Models.RemoteListenersQueues
 import com.afkanerd.deku.Router.data.dao.GatewayServerDAO
 import com.afkanerd.deku.Router.data.models.GatewayServer
 import com.afkanerd.smswithoutborders_libsmsmms.data.Cryptography.getDatabasePassword
+import com.afkanerd.smswithoutborders_libsmsmms.data.DatabaseImpl
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import kotlin.concurrent.Volatile
 
@@ -133,23 +135,26 @@ abstract class Datastore : RoomDatabase() {
         @Synchronized
         fun getDatastore(context: Context): Datastore {
             if (datastore == null) {
-                datastore = create(context)
+                create(context)
             }
             return datastore!!
         }
 
-        private fun create(context: Context): Datastore {
-            val databaseFile = context.getDatabasePath(databaseName)
-            val factory = SupportOpenHelperFactory(
-                getDatabasePassword(context, dbKeystoreAlias))
-            return databaseBuilder(
-                context,
-                Datastore::class.java,
-                databaseFile.absolutePath
-            )
-                .enableMultiInstanceInvalidation()
-                .openHelperFactory(factory)
-                .build()
+        private fun create(context: Context) {
+            getDatabasePassword(context, dbKeystoreAlias).use { password ->
+                val databaseFile = context.getDatabasePath(databaseName)
+
+                password.useRaw { rawBytes ->
+                    datastore = databaseBuilder(
+                        context = context.applicationContext,
+                        klass = Datastore::class.java,
+                        databaseFile.absolutePath,
+                    )
+                        .openHelperFactory(SupportOpenHelperFactory(rawBytes))
+                        .fallbackToDestructiveMigration(false)
+                        .build()
+                }
+            }
         }
     }
 }
